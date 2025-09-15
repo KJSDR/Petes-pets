@@ -6,9 +6,9 @@ if (!process.env.PORT) {
 const express = require('express');
 const path = require('path');
 const favicon = require('serve-favicon');
-const logger = require('morgan');
-const cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser');
+const logger = require('morgan'); //logs requests to console
+const cookieParser = require('cookie-parser'); //parse cookies from http requests
+const bodyParser = require('body-parser'); //parse requests like json and form data
 const methodOverride = require('method-override')
 
 const app = express();
@@ -24,7 +24,7 @@ mongoose.connect('mongodb://localhost/local', {
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
-
+//static files like css, images etc..
 app.use(express.static(path.join(__dirname, 'public')));
 
 // override with POST having ?_method=DELETE or ?_method=PUT
