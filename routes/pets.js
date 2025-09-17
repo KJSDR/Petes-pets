@@ -1,12 +1,6 @@
 // MODELS
 const Pet = require('../models/pet');
 
-console.log('Environment check:');
-console.log('S3_BUCKET:', process.env.S3_BUCKET);
-console.log('S3_REGION:', process.env.S3_REGION);
-console.log('AWS_ACCESS_KEY_ID:', process.env.AWS_ACCESS_KEY_ID ? 'Present' : 'Missing');
-console.log('AWS_SECRET_ACCESS_KEY:', process.env.AWS_SECRET_ACCESS_KEY ? 'Present' : 'Missing');
-
 // UPLOADING TO AWS S3
 const multer  = require('multer');
 const upload = multer({ dest: 'uploads/' });
@@ -46,10 +40,6 @@ module.exports = (app) => {
 
   // CREATE PET
   app.post('/pets', upload.single('avatar'), (req, res, next) => {
-    console.log('=== CREATE PET REQUEST ===');
-    console.log('Body:', req.body);
-    console.log('File:', req.file ? 'File present' : 'No file');
-    
     var pet = new Pet(req.body);
     
     pet.save(function (err) {
@@ -58,18 +48,12 @@ module.exports = (app) => {
         return res.status(400).send({ error: 'Pet validation failed', details: err });
       }
       
-      console.log('Pet saved successfully, ID:', pet._id);
-      
       if (req.file) {
-        console.log('Starting S3 upload for file:', req.file.filename);
-        
         client.upload(req.file.path, {}, function (err, versions, meta) {
           if (err) { 
             console.log('S3 upload failed:', err);
             return res.status(400).send({ error: 'S3 upload failed', details: err }) 
           }
-          
-          console.log('S3 upload successful:', versions);
           
           // Fix: Only use the first version URL and save once
           if (versions.length > 0) {
@@ -89,7 +73,6 @@ module.exports = (app) => {
           }
         });
       } else {
-        console.log('No file to upload');
         res.send({ pet: pet });
       }
     });
