@@ -22,6 +22,9 @@ block content
             label Favorite Food*
             input.form-control(name="favoriteFood" required) 
         .form-group
+            label Price*
+            input.form-control(name="price" required type="number" step="0.01" min="0")
+        .form-group
             label Description*
             textarea.form-control(name="description" required minlength="140")   
         button(type="submit").btn.btn-primary Save
